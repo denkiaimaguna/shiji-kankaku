@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>支持間隔検索</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+      background: #f0f0f0;
+      color: #111;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: white;
+      padding: 18px 16px 14px;
+      text-align: center;
+    }
+    header h1 { font-size: 20px; font-weight: bold; letter-spacing: 0.5px; }
+    header p { font-size: 12px; color: #8899bb; margin-top: 4px; }
+
+    .section { padding: 16px; }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .step-badge {
+      background: #e85c0a;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title { font-size: 14px; font-weight: bold; color: #444; }
+
+    .material-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .material-btn {
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 16px 10px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #111;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.4;
+      transition: all 0.12s;
+    }
+    .material-btn .sub {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      font-weight: normal;
+      margin-top: 2px;
+    }
+    .material-btn.selected {
+      background: #1a1a2e;
+      border-color: #1a1a2e;
+      color: white;
+    }
+    .material-btn.selected .sub { color: #7799cc; }
+
+    .cond-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cond-btn {
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #111;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.12s;
+    }
+    .cond-btn .cond-note {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      font-weight: normal;
+      margin-top: 4px;
+    }
+    .cond-btn.selected {
+      background: #e85c0a;
+      border-color: #e85c0a;
+      color: white;
+    }
+    .cond-btn.selected .cond-note { color: #ffe0cc; }
+
+    .result-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .result-card.accent-orange { border-top: 4px solid #e85c0a; }
+    .result-card.accent-blue   { border-top: 4px solid #1a1a2e; }
+
+    .result-label { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .result-value {
+      font-size: 44px;
+      font-weight: bold;
+      color: #e85c0a;
+      line-height: 1;
+    }
+    .result-basis {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 10px;
+    }
+    .result-note {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    .note {
+      font-size: 11px;
+      color: #aaa;
+      padding: 0 16px;
+      line-height: 1.7;
+    }
+
+    .divider { height: 8px; background: #e8e8e8; }
+
+    #step2     { display: none; }
+    #resultArea { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ 支持間隔検索</h1>
+  <p>電材別・支持間隔 即検索ツール</p>
+</header>
+
+<!-- STEP 1 -->
+<div class="section" id="step1">
+  <div class="step-header">
+    <div class="step-badge">1</div>
+    <div class="step-title">電材の種類を選ぶ</div>
+  </div>
+  <div class="material-grid">
+    <button class="material-btn" onclick="selectMaterial(this,'CABLE')">ケーブル<span class="sub">VVF・CV・CVT等</span></button>
+    <button class="material-btn" onclick="selectMaterial(this,'RACK')">ケーブルラック<span class="sub"></span></button>
+    <button class="material-btn" onclick="selectMaterial(this,'RACEWAY')">レースウェイ<span class="sub"></span></button>
+    <button class="material-btn" onclick="selectMaterial(this,'DUCT')">ケーブルダクト<span class="sub"></span></button>
+    <button class="material-btn" onclick="selectMaterial(this,'STEEL')">鋼製電線管<span class="sub">G管・E管</span></button>
+    <button class="material-btn" onclick="selectMaterial(this,'FLEX')">可とう電線管<span class="sub">プリカ・マシンフレキ等</span></button>
+    <button class="material-btn" onclick="selectMaterial(this,'PF')">PF管<span class="sub">合成樹脂製可とう電線管</span></button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STEP 2 -->
+<div class="section" id="step2">
+  <div class="step-header">
+    <div class="step-badge">2</div>
+    <div class="step-title">条件を選ぶ</div>
+  </div>
+  <div class="cond-grid" id="condGrid"></div>
+</div>
+
+<div class="divider" id="dividerResult" style="display:none"></div>
+
+<!-- RESULT -->
+<div id="resultArea">
+  <div class="section">
+    <div class="result-card accent-orange">
+      <div class="result-label">支持間隔</div>
+      <div class="result-value" id="rInterval">—</div>
+      <div class="result-basis" id="rBasis"></div>
+    </div>
+    <div class="result-card accent-blue">
+      <div class="result-label">備考</div>
+      <div class="result-note" id="rNote">—</div>
+    </div>
+  </div>
+  <p class="note">
+    ※ 電気設備技術基準の解釈・内線規程に基づく値です。<br>
+    ※ 現場条件・施工方法により異なる場合があります。必ず現場の状況に合わせて確認してください。
+  </p>
+</div>
+
+<script>
+const MATERIALS = {
+  CABLE: {
+    name: 'ケーブル',
+    conditions: [
+      {
+        label: '水平・造営材の側面/下面',
+        note: 'VVF・CV・CVT等 一般ケーブル',
+        interval: '2m以内',
+        basis: '根拠：電技解釈 第164条',
+        resultNote: 'VVF・CV・CVT等の一般ケーブル。造営材の下面または側面に沿って取り付ける場合。'
+      },
+      {
+        label: '垂直配線',
+        note: 'VVF・CV・CVT等 一般ケーブル',
+        interval: '6m以内',
+        basis: '根拠：電技解釈 第164条',
+        resultNote: '接触防護措置を施した場所では15m以内。'
+      },
+      {
+        label: 'キャブタイヤケーブル',
+        note: '水平・垂直共通',
+        interval: '1m以内',
+        basis: '根拠：電技解釈 第164条',
+        resultNote: '水平・垂直いずれの場合も1m以内。'
+      },
+    ]
+  },
+  RACK: {
+    name: 'ケーブルラック',
+    conditions: [
+      {
+        label: '横支持（水平）',
+        note: '',
+        interval: '2m以内',
+        basis: '根拠：内線規程',
+        resultNote: '吊りボルト等でしっかり固定すること。終端・曲がり部の近くにも支持が必要。'
+      },
+      {
+        label: '縦支持（垂直）',
+        note: '配線室等は6m以内で各階支持可',
+        interval: '3m以内',
+        basis: '根拠：公共建築工事標準仕様書・内線規程',
+        resultNote: '配線室（EPSなど）では6m以内で各階に支持点を設けることでも可。'
+      },
+    ]
+  },
+  RACEWAY: {
+    name: 'レースウェイ',
+    conditions: [
+      {
+        label: '一般',
+        note: '',
+        interval: '1.5m以内',
+        basis: '根拠：電技解釈',
+        resultNote: '終端・接続部・曲がり部の近くにも支持が必要。'
+      },
+    ]
+  },
+  DUCT: {
+    name: 'ケーブルダクト',
+    conditions: [
+      {
+        label: '一般',
+        note: '',
+        interval: '3m以内',
+        basis: '根拠：内線規程',
+        resultNote: '取付方法・ダクトの種類により異なる場合あり。終端部近くにも支持が必要。'
+      },
+    ]
+  },
+  STEEL: {
+    name: '鋼製電線管',
+    conditions: [
+      {
+        label: '一般（G管・E管）',
+        note: '',
+        interval: '2m以内',
+        basis: '根拠：電技解釈 第159条',
+        resultNote: '管端・管相互の接続部分・ボックス等への接続部分の近くにも支持が必要。'
+      },
+    ]
+  },
+  FLEX: {
+    name: '可とう電線管',
+    conditions: [
+      {
+        label: '造営材に沿って施設',
+        note: 'プリカ・マシンフレキ等（2種）',
+        interval: '1m以内',
+        basis: '根拠：電技解釈 第163条',
+        resultNote: '2種金属製可とう電線管（プリカ・マシンフレキ等）を造営材に沿って施設する場合。'
+      },
+      {
+        label: '電動機等への接続部分',
+        note: '可とう性を必要とする部分',
+        interval: '規定なし',
+        basis: '根拠：電技解釈 第163条',
+        resultNote: '可とう性を確保し、必要最小限の長さとすること。造営材に固定しない自由な状態で使用。'
+      },
+    ]
+  },
+  PF: {
+    name: 'PF管（合成樹脂製可とう電線管）',
+    conditions: [
+      {
+        label: '造営材に沿って施設',
+        note: 'PF-S・PF-D',
+        interval: '1.5m以内',
+        basis: '根拠：電技解釈 第158条',
+        resultNote: '管端・接続部・ボックス近傍にも支持が必要。'
+      },
+    ]
+  },
+};
+
+let curMaterial = null;
+
+function selectMaterial(btn, type) {
+  curMaterial = type;
+  document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  const mat = MATERIALS[type];
+  const grid = document.getElementById('condGrid');
+  grid.innerHTML = '';
+
+  mat.conditions.forEach(cond => {
+    const b = document.createElement('button');
+    b.className = 'cond-btn';
+    b.innerHTML = `${cond.label}${cond.note ? `<span class="cond-note">${cond.note}</span>` : ''}`;
+    b.onclick = () => showResult(cond, b);
+    grid.appendChild(b);
+  });
+
+  document.getElementById('step2').style.display = 'block';
+  document.getElementById('resultArea').style.display = 'none';
+  document.getElementById('dividerResult').style.display = 'none';
+  document.querySelectorAll('.cond-btn').forEach(b => b.classList.remove('selected'));
+
+  if (mat.conditions.length === 1) {
+    const firstBtn = grid.querySelector('.cond-btn');
+    showResult(mat.conditions[0], firstBtn);
+  } else {
+    setTimeout(() => {
+      document.getElementById('step2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+}
+
+function showResult(cond, btn) {
+  document.querySelectorAll('.cond-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  document.getElementById('rInterval').textContent = cond.interval;
+  document.getElementById('rBasis').textContent = cond.basis;
+  document.getElementById('rNote').textContent = cond.resultNote || '—';
+
+  document.getElementById('dividerResult').style.display = 'block';
+  document.getElementById('resultArea').style.display = 'block';
+
+  setTimeout(() => {
+    document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+</script>
+</body>
+</html>
