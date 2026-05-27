@@ -121,6 +121,7 @@
     }
     .result-card.accent-orange { border-top: 4px solid #e85c0a; }
     .result-card.accent-blue   { border-top: 4px solid #1a1a2e; }
+    .result-card.accent-green  { border-top: 4px solid #2d8c4e; }
 
     .result-label { font-size: 12px; color: #888; margin-bottom: 8px; }
     .result-value {
@@ -223,6 +224,11 @@
       <div class="result-value" id="rInterval">—</div>
       <div class="result-basis" id="rBasis"></div>
     </div>
+    <div class="result-card accent-green" id="rCableCard" style="display:none">
+      <div class="result-label">ラック上ケーブルの固定間隔</div>
+      <div class="result-value" id="rCableInterval" style="font-size:36px; color:#2d8c4e;">—</div>
+      <div class="result-basis" id="rCableBasis"></div>
+    </div>
     <div class="result-card accent-blue">
       <div class="result-label">備考</div>
       <div class="result-note" id="rNote">—</div>
@@ -270,6 +276,8 @@ const MATERIALS = {
         note: '',
         interval: '2m以内',
         basis: '根拠：公共建築工事標準仕様書・内線規程',
+        cableInterval: '3m以内',
+        cableBasis: '根拠：内線規程（トレー形は省略可）',
         resultNote: '鋼製ケーブルラックの水平支持間隔。終端・曲がり部の近くにも支持が必要。'
       },
       {
@@ -277,6 +285,8 @@ const MATERIALS = {
         note: 'アルミ・ステンレス等',
         interval: '1.5m以内',
         basis: '根拠：公共建築工事標準仕様書・内線規程',
+        cableInterval: '3m以内',
+        cableBasis: '根拠：内線規程（トレー形は省略可）',
         resultNote: 'アルミ・ステンレス等の鋼製以外のケーブルラックの水平支持間隔。終端・曲がり部の近くにも支持が必要。'
       },
       {
@@ -284,6 +294,8 @@ const MATERIALS = {
         note: '電気室・EPSは6m間隔でOK',
         interval: '3m以内',
         basis: '根拠：公共建築工事標準仕様書・内線規程',
+        cableInterval: '1.5m以内',
+        cableBasis: '根拠：内線規程',
         resultNote: '電気室・EPS（配線室）内では<br><span class="note-highlight">6m間隔</span><br>での支持も認められる。<br>終端・曲がり部近くにも支持が必要。'
       },
     ]
@@ -438,6 +450,16 @@ function showResult(cond, btn) {
   document.getElementById('rInterval').textContent = cond.interval;
   document.getElementById('rBasis').textContent = cond.basis;
   document.getElementById('rNote').innerHTML = cond.resultNote || '—';
+
+  // ラック上ケーブル固定間隔カード
+  const cableCard = document.getElementById('rCableCard');
+  if (cond.cableInterval) {
+    document.getElementById('rCableInterval').textContent = cond.cableInterval;
+    document.getElementById('rCableBasis').textContent = cond.cableBasis || '';
+    cableCard.style.display = 'block';
+  } else {
+    cableCard.style.display = 'none';
+  }
 
   document.getElementById('dividerResult').style.display = 'block';
   document.getElementById('resultArea').style.display = 'block';
