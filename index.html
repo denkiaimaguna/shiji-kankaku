@@ -229,6 +229,11 @@
       <div class="result-value" id="rCableInterval" style="font-size:36px; color:#2d8c4e;">—</div>
       <div class="result-basis" id="rCableBasis"></div>
     </div>
+    <div class="result-card" id="rSeismicCard" style="display:none; border-top: 4px solid #7c3aed;">
+      <div class="result-label">耐震クラスS</div>
+      <div class="result-value" id="rSeismicInterval" style="font-size:36px; color:#7c3aed;">—</div>
+      <div class="result-basis" id="rSeismicBasis">根拠：建築電気設備の耐震設計・施工マニュアル 指針表6.2-1</div>
+    </div>
     <div class="result-card accent-blue">
       <div class="result-label">備考</div>
       <div class="result-note" id="rNote">—</div>
@@ -297,6 +302,30 @@ const MATERIALS = {
         cableInterval: '1.5m以内',
         cableBasis: '根拠：内線規程',
         resultNote: '電気室・EPS（配線室）内では<br><span class="note-highlight">6m間隔</span><br>での支持も認められる。<br>終端・曲がり部近くにも支持が必要。'
+      },
+      {
+        label: '耐震支持 ／ 上層階・屋上・塔屋',
+        note: '耐震クラスA・B：8m以内　クラスS：6m以内',
+        interval: '【A・B】8m以内',
+        basis: '根拠：建築電気設備の耐震設計・施工マニュアル 指針表6.2-1',
+        seismicInterval: '【クラスS】6m以内',
+        resultNote: '<small style="color:#aaa;">【上層階の定義】2〜6階建て：最上階／7〜9階建て：上の2層／10〜12階建て：上の3層／13階建て以上：上の4層</small><br><br><b>耐震クラスA・B：</b>8m以内に1箇所、A種またはB種の耐震支持を設ける。<br><b>耐震クラスS：</b>6m以内に1箇所、Ss種の耐震支持を設ける。<br><br><span class="note-recommend">⚠ 末端部の基本ルール（クラス共通）</span><br>末端から<b>2m以内</b>に必ず耐震支持（振れ止め）を設ける。<br>※現場・仕様によっては1m以内とする基準もあり。<br><br><span class="note-recommend">除外条件（耐震支持不要）</span><br>・幅400mm未満のもの<br>・吊り長さが平均20cm以下のもの<br><br><span class="note-recommend">🔧 支持方法</span><br>・S種・A種：アングル材で支持ブラケットを作成し、スラブ・梁にアンカーボルトで固定する。<br>・B種：全ネジボルトを用いて振れ止めを施す。'
+      },
+      {
+        label: '耐震支持 ／ 中間階',
+        note: '耐震クラスA・B：12m以内　クラスS：8m以内',
+        interval: '【A・B】12m以内',
+        basis: '根拠：建築電気設備の耐震設計・施工マニュアル 指針表6.2-1',
+        seismicInterval: '【クラスS】8m以内',
+        resultNote: '<small style="color:#aaa;">【中間階の定義】地階・1階を除く各階のうち、上層階に該当しない階。</small><br><br><b>耐震クラスA・B：</b>12m以内に1箇所、A種またはB種の耐震支持を設ける。<br><b>耐震クラスS：</b>8m以内に1箇所、A種の耐震支持を設ける。<br><br><span class="note-recommend">⚠ 末端部の基本ルール（クラス共通）</span><br>末端から<b>2m以内</b>に必ず耐震支持（振れ止め）を設ける。<br>※現場・仕様によっては1m以内とする基準もあり。<br><br><span class="note-recommend">除外条件（耐震支持不要）</span><br>・幅400mm未満のもの<br>・吊り長さが平均20cm以下のもの<br><br><span class="note-recommend">🔧 支持方法</span><br>・S種・A種：アングル材で支持ブラケットを作成し、スラブ・梁にアンカーボルトで固定する。<br>・B種：全ネジボルトを用いて振れ止めを施す。'
+      },
+      {
+        label: '耐震支持 ／ 地階・1階',
+        note: '耐震クラスA・B：12m以内　クラスS：8m以内（A種）',
+        interval: '【A・B】12m以内',
+        basis: '根拠：建築電気設備の耐震設計・施工マニュアル 指針表6.2-1',
+        seismicInterval: '【クラスS】8m以内',
+        resultNote: '<small style="color:#aaa;">【地階・1階の定義】地下の階および地上1階。</small><br><br><b>耐震クラスA・B：</b>12m以内に1箇所、A種またはB種の耐震支持を設ける。<br><b>耐震クラスS：</b>8m以内に1箇所、A種の耐震支持を設ける。<br><br><span class="note-recommend">⚠ 末端部の基本ルール（クラス共通）</span><br>末端から<b>2m以内</b>に必ず耐震支持（振れ止め）を設ける。<br>※現場・仕様によっては1m以内とする基準もあり。<br><br><span class="note-recommend">除外条件（耐震支持不要）</span><br>・幅400mm未満のもの<br>・吊り長さが平均20cm以下のもの<br><br><span class="note-recommend">🔧 支持方法</span><br>・S種・A種：アングル材で支持ブラケットを作成し、スラブ・梁にアンカーボルトで固定する。<br>・B種：全ネジボルトを用いて振れ止めを施す。'
       },
     ]
   },
@@ -451,6 +480,10 @@ function showResult(cond, btn) {
   document.getElementById('rBasis').textContent = cond.basis;
   document.getElementById('rNote').innerHTML = cond.resultNote || '—';
 
+  // 耐震支持の場合はラベルを変更
+  const intervalLabel = document.querySelector('#resultArea .result-card.accent-orange .result-label');
+  intervalLabel.textContent = cond.seismicInterval ? '耐震支持間隔（クラスA・B）' : '支持間隔';
+
   // ラック上ケーブル固定間隔カード
   const cableCard = document.getElementById('rCableCard');
   if (cond.cableInterval) {
@@ -459,6 +492,15 @@ function showResult(cond, btn) {
     cableCard.style.display = 'block';
   } else {
     cableCard.style.display = 'none';
+  }
+
+  // 耐震クラスSカード
+  const seismicCard = document.getElementById('rSeismicCard');
+  if (cond.seismicInterval) {
+    document.getElementById('rSeismicInterval').textContent = cond.seismicInterval;
+    seismicCard.style.display = 'block';
+  } else {
+    seismicCard.style.display = 'none';
   }
 
   document.getElementById('dividerResult').style.display = 'block';
