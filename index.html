@@ -337,7 +337,7 @@ const MATERIALS = {
         note: '',
         interval: '1.5m以内',
         basis: '根拠：内線規程・公共建築工事標準仕様書',
-        resultNote: '終端・接続部・曲がり部の近くにも支持が必要。'
+        resultNote: '終端・接続部・曲がり部の近くにも支持が必要。<br><span class="note-recommend">振れ止めを施す場合は耐震支持間隔または現場施工要領書を確認すること。</span>'
       },
     ]
   },
@@ -349,14 +349,14 @@ const MATERIALS = {
         note: '',
         interval: '3m以内',
         basis: '根拠：内線規程',
-        resultNote: '取付方法・ダクトの種類により異なる場合あり。終端部近くにも支持が必要。'
+        resultNote: '取付方法・ダクトの種類により異なる場合あり。終端部近くにも支持が必要。<br><span class="note-recommend">振れ止めを施す場合は耐震支持間隔または現場施工要領書を確認すること。</span>'
       },
       {
         label: '縦支持（垂直）',
         note: '各階支持が必要',
         interval: '6m以内',
         basis: '根拠：内線規程',
-        resultNote: '垂直敷設の場合は6m以下ごとに支持点を設ける。各階での支持が必要。終端部近くにも支持が必要。'
+        resultNote: '垂直敷設の場合は6m以下ごとに支持点を設ける。各階での支持が必要。終端部近くにも支持が必要。<br><span class="note-recommend">振れ止めを施す場合は耐震支持間隔または現場施工要領書を確認すること。</span>'
       },
     ]
   },
@@ -369,6 +369,20 @@ const MATERIALS = {
         interval: '2m以内',
         basis: '根拠：電技解釈 第159条',
         resultNote: 'ボックスから1か所目の支持は500mm以内。<br><span class="note-recommend">曲がり箇所は300〜500mm以内の支持を推奨</span><br>管端・管相互の接続部分・ボックス等への接続部分の近くにも支持が必要。'
+      },
+      {
+        label: '耐震支持（上層階・屋上・塔屋）',
+        note: 'A種（SA種）耐震支持',
+        interval: '12m以内に1箇所',
+        basis: '根拠：公共建築工事標準仕様書（電気設備工事編）',
+        resultNote: '上層階・屋上・塔屋に敷設する電気配管の耐震支持間隔。A種（SA種）耐震支持金物を12m以内に1箇所設置すること。<br><span class="note-recommend">除外：φ82以下の単独管で吊り長さの平均が200mm以下かつ周長800mm以下の場合は耐震支持不要。</span>'
+      },
+      {
+        label: '耐震支持（中間階・地階・1階）',
+        note: 'A種またはB種耐震支持',
+        interval: '12m以内に1箇所',
+        basis: '根拠：公共建築工事標準仕様書（電気設備工事編）',
+        resultNote: '中間階・地階・1階に敷設する電気配管の耐震支持間隔。A種またはB種耐震支持金物を12m以内に1箇所設置すること。<br><span class="note-recommend">除外：φ82以下の単独管で吊り長さの平均が200mm以下かつ周長800mm以下の場合は耐震支持不要。</span>'
       },
     ]
   },
